@@ -25,4 +25,16 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     @Query("SELECT e FROM Expense e WHERE e.user.id_user = :id_user"
             + " AND (:title = '' OR LOWER(e.title) LIKE LOWER(CONCAT('%', :title, '%')) )")
     List<Expense> searchExpenses(long id_user, String title);
+
+    @Query("SELECT e FROM Expense e WHERE e.user.id_user = :id_user" +
+            " AND YEAR(e.date) = YEAR(CURRENT_DATE())" +
+            " AND MONTH(e.date) = MONTH(CURRENT_DATE())")
+    List<Expense> findExpensesByUserAndCurrentMonth(long id_user);
+
+    @Query("SELECT new com.example.Fineance.dto.CategorySummaryDTO(e.category, SUM(e.amount)) " +
+            "FROM Expense e WHERE e.user.id_user = :id_user" +
+            " AND YEAR(e.date) = YEAR(CURRENT_DATE())" +
+            " AND MONTH(e.date) = MONTH(CURRENT_DATE())" +
+            " GROUP BY e.category ORDER BY SUM(e.amount) DESC")
+    List<CategorySummaryDTO> findTopExpenseCategoriesByCurrentMonth(long id_user, Pageable pageable);
 }

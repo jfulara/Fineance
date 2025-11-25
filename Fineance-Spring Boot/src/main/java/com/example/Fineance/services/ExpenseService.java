@@ -49,4 +49,12 @@ public class ExpenseService {
     public Optional<Expense> getExpenseById(long id) {
         return expenseRepository.findById(id);
     }
+
+    public List<Expense> getExpensesByUserAndCurrentMonth(long id_user) {
+        return expenseRepository.findExpensesByUserAndCurrentMonth(id_user);
+    }
+
+    public List<CategorySummaryDTO> getTopExpenseCategoriesByCurrentMonth(long id_user, int count) {
+        return expenseRepository.findTopExpenseCategoriesByCurrentMonth(id_user, PageRequest.of(0, count));
+    }
 }

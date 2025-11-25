@@ -105,8 +105,8 @@ function AddIncome() {
                         <select name="category" placeholder="Kategoria" value={category} onChange={e => setCategory(e.target.value)} required>
                             <option value="Nieistotne">Nieistotne</option>
                             <option value="Oszczędności i inwestycje">Oszczędności i inwestycje</option>
-                            <option value="Podarunek">Podarunek</option>
-                            <option value="Premia">Premia</option>
+                            <option value="Podarunki">Podarunek</option>
+                            <option value="Premie">Premia</option>
                             <option value="Wynagrodzenie">Wynagrodzenie</option>
                             <option value="Nieskategoryzowane">Nieskategoryzowane</option>
                         </select>

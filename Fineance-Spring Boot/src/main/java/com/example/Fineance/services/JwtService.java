@@ -56,6 +56,24 @@ public class JwtService {
         return generateToken(user, jwtRefreshExpiration);
     }
 
+    public String generateNewAccessToken(String refreshToken) {
+        String username = extractUsername(refreshToken);
+        Claims claims = extractAllClaims(refreshToken);
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtAccessExpiration);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("id", claims.get("id"))
+                .claim("name", claims.get("name"))
+                .claim("surname", claims.get("surname"))
+                .claim("role", claims.get("role"))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     private String generateToken(User user, long expirationMillis) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMillis);

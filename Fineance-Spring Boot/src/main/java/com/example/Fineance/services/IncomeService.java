@@ -35,9 +35,7 @@ public class IncomeService {
     }
 
     public List<CategorySummaryDTO> getTopIncomeCategories(long id_user, int count) {
-        List<CategorySummaryDTO> topIncomeCategories = incomeRepository.findTopIncomeCategories(id_user, PageRequest.of(0, count));
-        System.out.println(topIncomeCategories);
-        return topIncomeCategories;
+        return incomeRepository.findTopIncomeCategories(id_user, PageRequest.of(0, count));
     }
 
     public Income addIncome(Income income) {
@@ -51,5 +49,13 @@ public class IncomeService {
 
     public Optional<Income> getIncomeById(long id) {
         return incomeRepository.findById(id);
+    }
+
+    public List<Income> getIncomesByUserAndCurrentMonth(long id_user) {
+        return incomeRepository.findIncomesByUserAndCurrentMonth(id_user);
+    }
+
+    public List<CategorySummaryDTO> getTopIncomeCategoriesByCurrentMonth(long id_user, int count) {
+        return incomeRepository.findTopIncomeCategoriesByCurrentMonth(id_user, PageRequest.of(0, count));
     }
 }

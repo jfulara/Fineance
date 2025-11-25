@@ -72,18 +72,18 @@ public class AuthController {
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false) // Zmień na true w produkcji z https
                 .path("/")
                 .maxAge(15 * 60) // 15 minut
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false) // Zmień na true w produkcji z https
                 .path("/")
                 .maxAge(7 * 24 * 60 * 60) // 7 dni
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());

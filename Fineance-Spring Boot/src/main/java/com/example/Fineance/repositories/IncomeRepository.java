@@ -27,4 +27,16 @@ public interface IncomeRepository extends JpaRepository<Income, Long> {
     @Query("SELECT i FROM Income i WHERE i.user.id_user = :id_user" +
             " AND (:title = '' OR LOWER(i.title) LIKE LOWER(CONCAT('%', :title, '%')) )")
     List<Income> searchIncomes(long id_user, String title);
+
+    @Query("SELECT i FROM Income i WHERE i.user.id_user = :id_user" +
+            " AND YEAR(i.date) = YEAR(CURRENT_DATE())" +
+            " AND MONTH(i.date) = MONTH(CURRENT_DATE())")
+    List<Income> findIncomesByUserAndCurrentMonth(long id_user);
+
+    @Query("SELECT new com.example.Fineance.dto.CategorySummaryDTO(i.category, SUM(i.amount)) " +
+            "FROM Income i WHERE i.user.id_user = :id_user" +
+            " AND YEAR(i.date) = YEAR(CURRENT_DATE())" +
+            " AND MONTH(i.date) = MONTH(CURRENT_DATE())" +
+            " GROUP BY i.category ORDER BY SUM(i.amount) DESC")
+    List<CategorySummaryDTO> findTopIncomeCategoriesByCurrentMonth(long id_user, Pageable pageable);
 }

@@ -58,16 +58,19 @@ public class HomeController {
         }
         User user = userService.getUserByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        List<Income> incomes = incomeService.getAllIncomesByUser(user.getId_user());
-        List<Expense> expenses = expenseService.getAllExpensesByUser(user.getId_user());
+
+        List<Income> incomes = incomeService.getIncomesByUserAndCurrentMonth(user.getId_user());
+        List<Expense> expenses = expenseService.getExpensesByUserAndCurrentMonth(user.getId_user());
+
         BigDecimal totalIncome = incomes.stream()
                 .map(Income::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal totalExpense = expenses.stream()
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        List<CategorySummaryDTO> incomeCategorySummaries = incomeService.getTopIncomeCategories(user.getId_user(), 4);
-        List<CategorySummaryDTO> expenseCategorySummaries = expenseService.getTopExpenseCategories(user.getId_user(), 4);
+
+        List<CategorySummaryDTO> incomeCategorySummaries = incomeService.getTopIncomeCategoriesByCurrentMonth(user.getId_user(), 4);
+        List<CategorySummaryDTO> expenseCategorySummaries = expenseService.getTopExpenseCategoriesByCurrentMonth(user.getId_user(), 4);
 
         HomeDTO homeDTO = new HomeDTO(incomes, expenses, totalIncome.doubleValue(), totalExpense.doubleValue(),
                 incomeCategorySummaries, expenseCategorySummaries);
