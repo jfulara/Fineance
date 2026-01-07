@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { fetchWithAuth } from '../utils/fetchWithAuth'
+import '../styles/style.css'
+import '../styles/add-operation.css'
 
 function AddIncome() {
     const navigate = useNavigate();
@@ -14,9 +16,11 @@ function AddIncome() {
     const [date, setDate] = useState("");
     const [category, setCategory] = useState("Wynagrodzenie");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        setLoading(true);
 
         try {
             const response = await fetchWithAuth('http://localhost:8080/api/operations/addIncome', {
@@ -29,12 +33,14 @@ function AddIncome() {
             }, navigate, logout);
 
             if (response.ok) {
-                navigate('/')
+                navigate('/');
             } else {
-                setError('Niepoprawne dane')
+                setError('Niepoprawne dane');
             }
         } catch (error) {
-            setError('Błąd wprowadzania wpływu')
+            setError('Błąd wprowadzania wpływu');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -53,12 +59,13 @@ function AddIncome() {
                     <p>Witaj {user.name}!</p>
                 </div>
                 <ul className="active">
-                    <li><Link to="/" className="first">Podsumowanie<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link to="/budgetAnalysis">Analiza budżetu<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link to="/monthlyGoals">Cele miesięczne<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link to="/history">Historia operacji<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link to="/statistics">Statystyki<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link to="/savings">Oszczędzanie<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/" className="first"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/history"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/savings"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Statystyki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                 </ul>
                 <div className="buttons">
                     <button className="technical-help">Pomoc techniczna</button>
@@ -89,29 +96,80 @@ function AddIncome() {
                 </div>
             </nav>
             <main>
-                <section className="operation-form">
+                <section className="operation-section">
                     <h1>Dodaj operację</h1>
-                    <form onSubmit={handleSubmit}>
-                        <div className="messages">
-                            {messages.map((message, index) => (
-                                <p key={index}>{message}</p>
-                            ))}
-                            {error && <p style={{color: 'red'}}>{error}</p>}
-                        </div>
-                        <h2>Wprowadź nowy wpływ</h2>
-                        <input name="title" type="text" placeholder="Tytuł" value={title} onChange={e => setTitle(e.target.value)} required />
-                        <input name="amount" type="number" step="0.01" min="0.00" placeholder="Kwota" value={amount} onChange={e => setAmount(e.target.value)} required />
-                        <input name="date" type="date" placeholder="Data" value={date} onChange={e => setDate(e.target.value)} required />
-                        <select name="category" placeholder="Kategoria" value={category} onChange={e => setCategory(e.target.value)} required>
-                            <option value="Nieistotne">Nieistotne</option>
-                            <option value="Oszczędności i inwestycje">Oszczędności i inwestycje</option>
-                            <option value="Podarunki">Podarunek</option>
-                            <option value="Premie">Premia</option>
-                            <option value="Wynagrodzenie">Wynagrodzenie</option>
-                            <option value="Nieskategoryzowane">Nieskategoryzowane</option>
-                        </select>
-                        <button type="submit">Dodaj</button>
-                    </form>
+                    <div className="add-operation-content">
+                        <form onSubmit={handleSubmit} className="operation-form">
+                            <div className="messages">
+                                {messages.map((message, index) => (
+                                    <p key={index}>{message}</p>
+                                ))}
+                                {error && <p style={{color: 'red'}}>{error}</p>}
+                            </div>
+                            <h2>Wprowadź nowy wpływ</h2>
+                            <div className="form-group">
+                                <label>Tytuł *</label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    placeholder="np. Wynagrodzenie za lipiec"
+                                    value={title}
+                                    onChange={e => setTitle(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Kwota (PLN) *</label>
+                                <input
+                                    type="number"
+                                    name="amount"
+                                    step="0.01"
+                                    min="0.01"
+                                    placeholder="np. 5000.00"
+                                    value={amount}
+                                    onChange={e => setAmount(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Data *</label>
+                                <input
+                                    type="date"
+                                    name="date"
+                                    placeholder="Data"
+                                    value={date}
+                                    onChange={e => setDate(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Kategoria *</label>
+                                <select
+                                    name="category"
+                                    placeholder="Kategoria"
+                                    value={category}
+                                    onChange={e => setCategory(e.target.value)}
+                                    required
+                                >
+                                    <option value="Nieistotne">Nieistotne</option>
+                                    <option value="Oszczędności i inwestycje">Oszczędności i inwestycje</option>
+                                    <option value="Podarunki">Podarunek</option>
+                                    <option value="Premie">Premia</option>
+                                    <option value="Wynagrodzenie">Wynagrodzenie</option>
+                                    <option value="Nieskategoryzowane">Nieskategoryzowane</option>
+                                </select>
+                            </div>
+                            <div className="form-actions">
+                                <button
+                                    type="submit"
+                                    className="submit-btn"
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Dodawanie...' : 'Dodaj'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </section>
             </main>
         </>

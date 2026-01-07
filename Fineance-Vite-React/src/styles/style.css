@@ -19,8 +19,6 @@ nav.menu {
     height: 98.9vh;
     margin: 0;
     padding: 0;
-    background-color: #522546;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     position: fixed;
     top: 0;
     left: 0;
@@ -28,9 +26,12 @@ nav.menu {
     overflow-x: hidden;
     border-top-right-radius: 2rem;
     border-bottom-right-radius: 2rem;
-    border-image: linear-gradient(to bottom, #F7374F, #88304E);
+    /*border-image: linear-gradient(to bottom, #F7374F, #88304E);
     background: linear-gradient(#242424, #242424) padding-box,
-    linear-gradient(to bottom, #F7374F, #88304E) border-box;
+    linear-gradient(to bottom, #F7374F, #88304E) border-box;*/
+    border-image: linear-gradient(135deg, #F7374F, #F7374F20);
+    background: linear-gradient(#242424, #242424) padding-box,
+    linear-gradient(135deg, #F7374F, #F7374F20) border-box;
     border: 5px solid transparent;
     display: flex;
     flex-direction: column;
@@ -49,7 +50,217 @@ nav.menu {
     text-align: center;
     font-family: 'Lily Script One';
     font-size: 3.4rem;
-    background-image: linear-gradient(to right, #F7374F, #88304E);
+    /*background-image: linear-gradient(to right, #F7374F, #88304E);*/
+    background-image: linear-gradient(135deg, #F7374F, #F7374F20);
+    color: transparent;
+    background-clip: text;
+}
+
+div.welcome-string {
+    font-size: 2rem;
+}
+
+div.welcome-string > p {
+    margin: 0;
+}
+
+nav.menu > ul.active {
+    display: flex;
+    padding: 2vh;
+    list-style-type: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3vh;
+    font-size: 1rem;
+}
+
+nav.menu > ul.mobile-icons {
+    display: none;
+}
+
+nav.menu > ul > li > a {
+    width: 14vw;
+    align-items: start;
+    border-style: none none solid none;
+    border-width: 2px;
+    padding: 1.5vh 0.5vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #dddddd;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border-color: #F7374FBB;
+}
+
+nav.menu > ul > li > a.first {
+    border-style: solid none solid none;
+    color: #dddddd;
+    border-color: #F7374FBB;
+}
+
+nav.menu > ul > li > a > i {
+    font-size: 1rem;
+    transition: all 0.25s ease;
+}
+
+nav.menu > ul > li > a:hover > i {
+    transform: translateX(-5px);
+}
+
+nav.menu > ul > li > a > p {
+    margin: 0;
+    transition: all 0.25s ease;
+}
+
+nav.menu > ul > li > a:hover > p {
+    transform: translateX(5px);
+}
+
+nav.menu > ul > li > a:hover {
+    /*color: #88304E;*/
+    /*color: #F7374F60;*/
+    /*color: #dddddd80;*/
+    text-shadow: 0 0 8px #ddddddBB;
+    border-bottom: 2px solid #F7374FBB;
+}
+
+nav.menu > ul > li > a.first:hover {
+    border-top: 2px solid #F7374FBB;
+}
+
+nav.menu > ul > li > a.active {
+    color: #F7374FBB;
+    border-bottom: 2px solid #F7374FBB;
+}
+
+nav.menu > ul > li > a.active:hover {
+    text-shadow: 0 0 8px #F7374FBB;
+}
+
+nav.menu > ul > li > a.first.active {
+    border-top: 2px solid #F7374FBB;
+}
+
+nav.menu > div.buttons{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    margin-bottom: 3vh;
+}
+
+nav.menu > div.buttons button{
+    background-color: #2C2C2C;
+    padding: 1.5vh 1.5vw;
+    width: 11vw;
+    justify-content: center;
+    text-align: center;
+    font-size: 1em;
+    font-family: 'Calistoga';
+    border-radius: 1rem;
+    display: flex;
+    position: relative;
+    margin: 1vh;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #dddddd;
+    border: 1px solid #F7374FBB;
+}
+
+nav.menu > div.buttons button:hover {
+    /*color: #F7374F60;*/
+    transition: all 0.25s ease;
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px 0 rgba(247, 55, 79, 1);
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+nav.menu > div.buttons button > i {
+    color: #dddddd;
+    transform: rotate(0deg);
+    transition: transform 0.25s ease;
+}
+
+nav.menu > div.buttons button:hover > i {
+    transform: rotate(90deg);
+    transition: transform 0.25s ease;
+}
+
+nav.menu > div.buttons > button.settings{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 1.22vh 1.5vw;
+}
+
+nav.menu > div.buttons > button.settings > i{
+    font-size: 1.75em;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+}
+
+nav.menu > div.buttons button.logout{
+    /*background-color: #88304E;*/
+    background: linear-gradient(135deg, #F7374F60 0%, #F7374F20 100%);
+    transition: all 0.25s ease;
+    border: none;
+}
+
+nav.menu > div.buttons button.logout:hover{
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #F7374F 0%, #F7374F60 100%);
+    box-shadow: 0 0 10px 0 rgba(247, 55, 79, 1);
+    color: #dddddd;
+}
+
+/*nav.menu {
+    width: 18vw;
+    height: 98.9vh;
+    margin: 0;
+    padding: 0;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    overflow-x: hidden;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+    !*border-image: linear-gradient(to bottom, #F7374F, #88304E);
+    background: linear-gradient(#242424, #242424) padding-box,
+    linear-gradient(to bottom, #F7374F, #88304E) border-box;*!
+    border-image: linear-gradient(to bottom, #F7374F, #F7374F20);
+    background: linear-gradient(#242424, #242424) padding-box,
+    linear-gradient(to bottom, #F7374F, #F7374F20) border-box;
+    border: 5px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo > p {
+    width: 15vw;
+    text-align: center;
+    font-family: 'Lily Script One';
+    font-size: 3.4rem;
+    !*background-image: linear-gradient(to right, #F7374F, #88304E);*!
+    background-image: linear-gradient(to right, #F7374F, #F7374F20);
     color: transparent;
     background-clip: text;
 }
@@ -90,7 +301,7 @@ nav.menu > ul > li > a {
     align-items: center;
     color: #dddddd;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     cursor: pointer;
 }
 
@@ -105,9 +316,10 @@ nav.menu > ul > li > a > i {
 
 
 nav.menu > ul > li > a:hover {
-    color: #88304E;
+    !*color: #88304E;*!
+    color: #F7374F60;
     border-bottom: 2px solid #dddddd;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 nav.menu > ul > li > a.first:hover {
@@ -115,7 +327,7 @@ nav.menu > ul > li > a.first:hover {
 }
 
 nav.menu > ul > li > a.active {
-    color: #F7374F;
+    color: #F7374FBB;
     border-bottom: 2px solid #dddddd;
 }
 
@@ -145,25 +357,26 @@ nav.menu > div.buttons button{
     position: relative;
     margin: 1vh;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     color: #dddddd;
     border-color: #1C1C1C;
 }
 
 nav.menu > div.buttons button:hover {
-    color: #88304E;
-    transition: all 0.3s ease;
+    !*color: #88304E;*!
+    color: #F7374F60;
+    transition: all 0.25s ease;
 }
 
 nav.menu > div.buttons button > i {
     color: #dddddd;
     transform: rotate(0deg);
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease;
 }
 
 nav.menu > div.buttons button:hover > i {
     transform: rotate(90deg);
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease;
 }
 
 nav.menu > div.buttons > button.settings{
@@ -182,15 +395,16 @@ nav.menu > div.buttons > button.settings > i{
 }
 
 nav.menu > div.buttons button.logout{
-    background-color: #88304E;
-    transition: all 0.3s ease;
+    !*background-color: #88304E;*!
+    background-color: #F7374F60;
+    transition: all 0.25s ease;
 }
 
 nav.menu > div.buttons button.logout:hover{
     background-color: #F7374F;
     color: white;
-    transition: all 0.3s ease;
-}
+    transition: all 0.25s ease;
+}*/
 
 nav.adder {
     position: fixed;
@@ -205,14 +419,15 @@ nav.adder {
     background-color: #242424;
     z-index: 1;
     border-radius: 4rem;
-    transition: all 0.4s ease;
-    border: 3px solid;
+    transition: all 0.25s ease;
+    border: 3px solid #F7374FBB;
+    color: #F7374FBB;
 }
 
 nav.adder:hover {
     width: 20rem;
     height: 15rem;
-    transition: all 0.4s ease;
+    transition: all 0.25s ease;
 }
 
 nav.adder > ul.adder-list {
@@ -243,21 +458,27 @@ nav.adder:hover > ul.adder-list {
     font-family: 'Calistoga';
     font-size: 1.5rem;
     cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.adder-link:hover {
+    transform: translateX(5px);
 }
 
 .adder-link > span {
     color: #dddddd;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .adder-link:hover > span {
-    color: #88304E;
-    transition: all 0.3s ease;
+    /*color: #88304E;*/
+    /*color: #F7374F60;*/
+    text-shadow: 0 0 8px #ddddddBB;
 }
 
 .adder-link > i {
     transform: rotate(0deg);
-    transition: all 0.4s ease;
+    transition: all 0.25s ease;
     font-size: 2rem;
     width: 2.375rem;
     height: 2.375rem;
@@ -278,7 +499,7 @@ nav.adder:hover > ul.adder-list {
 
 .adder-link:hover > i {
     transform: rotate(180deg);
-    transition: all 0.4s ease;
+    transition: all 0.25s ease;
 }
 
 nav.adder > div.plus {
@@ -289,12 +510,12 @@ nav.adder > div.plus {
     bottom: 1.75rem;
     right: 2.1rem;
     transform: rotate(0deg);
-    transition: transform 0.5s ease;
+    transition: transform 0.25s ease;
 }
 
 nav.adder:hover > div.plus {
     transform: rotate(135deg);
-    transition: transform 0.5s ease;
+    transition: transform 0.25s ease;
 }
 
 nav.adder > div.plus > i {
@@ -303,8 +524,9 @@ nav.adder > div.plus > i {
 
 main {
     height: 96vh;
-    margin-left: 20vw;
-    padding: 1em;
+    width: 79.5vw;
+    margin-left: 18.5vw;
+    padding: 1rem;
 }
 
 .top {
@@ -408,7 +630,7 @@ main {
     align-items: center;
     color: #dddddd;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     cursor: pointer;
     font-size: 0.75rem;
 }
@@ -423,9 +645,10 @@ main {
 }*/
 
 .right-side > div > ul > li > a:hover {
-    color: #88304E;
+    /*color: #88304E;*/
+    color: #F7374F60;
     border-bottom: 2px solid #dddddd;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 div.category {
@@ -458,87 +681,6 @@ div.category {
     font-size: 2rem;
     text-align: center;
     margin: 1rem;
-}
-
-.login-container {
-    position: relative;
-    height: 70vh;
-    width: 70vw;
-    align-content: center;
-    justify-content: space-evenly;
-    margin: 15vh 15vw;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    flex-direction: row;
-    border-radius: 75px;
-    border-image: linear-gradient(to bottom, #25C839, #0F8BD3);
-    border: 5px solid transparent;
-    background: linear-gradient(#FFFFFF, #FFFFFF) padding-box,
-    linear-gradient(to bottom, #25C839, #0F8BD3) border-box;
-}
-
-.logo-side {
-    height: 35rem;
-    width: 35rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.logo-side > div.logo {
-    margin: 1rem 0;
-}
-
-.logo-side > div.logo > p {
-    font-size: 7rem;
-    margin: 0;
-    width: 35rem;
-}
-
-.logo-side > div.description {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1rem 0 3rem 0;
-}
-
-.logo-side > div.description > p.main-description {
-    font-size: 2.7rem;
-    margin: 0 0 2rem 0;
-}
-
-.logo-side > div.description > p.additional-description {
-    font-size: 1.8rem;
-    margin: 0;
-}
-
-.form-side {
-    height: 30rem;
-    width: 30rem;
-}
-
-form.login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-form.register {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-form input {
-    color: #dddddd;
-}
-
-.no-valid {
-    border: 3px solid red;
-    border-radius: 1rem;
-    box-shadow: 0 0 0 0.2rem red;
-    outline: none;
 }
 
 @media (max-width: 768px) {
@@ -630,7 +772,7 @@ form input {
     border-radius: 0.8rem;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     padding: 0.5rem 1rem;
-    transition: background 0.2s;
+    transition: background 0.25s;
 }
 
 .user-row a {
@@ -638,11 +780,12 @@ form input {
     text-decoration: none;
     font-size: 1.1rem;
     letter-spacing: 0.5px;
-    transition: color 0.2s;
+    transition: color 0.25s;
 }
 
 .user-row a:hover {
-    color: #88304E;
+    /*color: #88304E;*/
+    color: #F7374F60;
 }
 
 .delete-user-btn {
@@ -654,7 +797,7 @@ form input {
     margin-left: 1.2rem;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.25s, color 0.25s;
 }
 
 button.admin {

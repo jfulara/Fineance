@@ -1,0 +1,318 @@
+.btn-go-back {
+    display: flex;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    top: 2.25rem;
+    right: 3.5rem;
+    font-size: 2.5rem;
+    transform: rotate(45deg);
+    color: #F7374FBB;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-go-back i {
+    width: 50px;
+    height: 50px;
+}
+
+.btn-go-back:hover {
+    transform: rotate(135deg);
+}
+
+/* Szczegóły celu oszczędnościowego */
+.saving-details-container {
+    padding: 20px;
+    width: 35vw;
+    margin: 0 21vw;
+}
+
+.details-content {
+    background: #242424;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Sekcja obrazu */
+.details-image-section {
+    width: 100%;
+    height: 34vh;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f0f0;
+}
+
+.btn-edit {
+    position: relative;
+    top: 17rem;
+    left: 39.5rem;
+    color: #F7374FBB;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    transition: all 0.25s ease;
+}
+
+.btn-edit:hover {
+    transform: translateY(-2px);
+}
+
+.btn-edit i {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Sekcja informacji */
+.details-info {
+    padding: 20px 25px;
+    /*border-bottom: 1px solid #eee;*/
+}
+
+.details-info h1 {
+    margin: 0 0 20px 0;
+    color: #dddddd;
+    font-size: 28px;
+}
+
+/* Sekcja postępu */
+.progress-section {
+    margin-bottom: 30px;
+}
+
+.progress-section .progress-bar {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #F7374F20;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-section .progress-bar.large {
+    height: 12px;
+}
+
+.progress-section .progress-fill {
+    background: linear-gradient(90deg, #F7374F20 0%, #F7374F 100%);
+    transition: width 0.8s ease;
+}
+
+.progress-section .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-info p {
+    margin: 0;
+    color: #dddddd;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+/* Siatka kwot */
+.amounts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 0;
+}
+
+.amount-box {
+    background: #2C2C2C;
+    padding: 15px 10px;
+    border-radius: 1rem;
+    text-align: center;
+    border: 1px solid #F7374FBB;
+}
+
+.amount-box label {
+    display: block;
+    font-size: 13px;
+    color: #dddddd;
+    margin-bottom: 8px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.amount-box .amount {
+    font-size: 20px;
+    font-weight: 500;
+    color: #dddddd;
+}
+
+.amount-box .amount.remaining {
+    color: #F7374FAA;
+}
+
+/* Sekcja operacji */
+.operations-section {
+    padding: 10px 25px 25px 25px;
+    /*border-bottom: 1px solid #eee;*/
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.operation-box {
+    background: #2C2C2C;
+    padding: 20px;
+    border-radius: 1rem;
+    /*border: 1px solid #41B445;*/
+    border-left: 4px solid #41B445;
+}
+
+.operation-box:nth-child(2) {
+    border-color: #BF1A2F;
+}
+
+.operation-box h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #dddddd;
+    font-weight: normal;
+}
+
+.operation-box form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.operation-box input {
+    padding: 10px;
+    border: 1px solid #41B445;
+    border-radius: 0.5rem;
+    font-size: 14px;
+    width: 55%;
+    background: #242424;
+    color: #dddddd;
+    transition: all 0.1s ease;
+}
+
+.operation-box input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.operation-box:nth-child(2) input {
+    border: 1px solid #BF1A2F;
+}
+
+.operation-box input:focus {
+    outline: none;
+    /*border-color: #F7374FAA;
+    box-shadow: 0 0 10px 0 rgba(247, 55, 79, 0.67);*/
+    border-color: #41B445;
+    box-shadow: 0 0 10px 0 rgba(65, 180, 69, 0.67);
+}
+
+.operation-box:nth-child(2) input:focus {
+    border-color: #BF1A2F;
+    box-shadow: 0 0 10px 0 rgba(191, 26, 47, 0.67);
+}
+
+.btn-deposit,
+.btn-withdraw {
+    padding: 10px;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-size: 14px;
+    width: 30%;
+}
+
+.btn-deposit {
+    background: linear-gradient(90deg, #41B445 0%, #41B44560 100%);
+    color: white;
+}
+
+.btn-deposit:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px 0 rgba(65, 180, 69, 1);
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+.btn-withdraw {
+    background: linear-gradient(135deg, #BF1A2F 0%, #BF1A2F60 100%);
+    color: white;
+}
+
+.btn-withdraw:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px 0 rgba(191, 26, 47, 1);
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+.btn-deposit:disabled,
+.btn-withdraw:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Sekcja usuwania */
+.delete-section {
+    padding: 0 0 20px 0;
+    text-align: center;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #F7374F60 0%, #F7374F20 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 14px;
+}
+
+.btn-delete:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #F7374F 0%, #F7374F60 100%);
+    box-shadow: 0 0 10px 0 rgba(247, 55, 79, 1);
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .saving-details-container {
+        padding: 15px;
+    }
+
+    .details-info {
+        padding: 20px;
+    }
+
+    .details-info h1 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .amounts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .operations-section {
+        padding: 20px;
+        flex-direction: column;
+    }
+
+    .details-image-section {
+        height: 200px;
+    }
+}
+

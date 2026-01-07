@@ -1,5 +1,6 @@
 main.security-main {
     height: 100vh;
+    width: 100vw;
     margin-left: 0;
     padding: 0;
     justify-items: center;
@@ -105,10 +106,16 @@ main.security-main {
 
 form.login {
     height: 26rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 form.register {
     height: 35rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .form-side input {
@@ -122,6 +129,7 @@ form.register {
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
+    color: #dddddd;
 }
 
 .button-background {
@@ -243,4 +251,11 @@ div.login-link > p {
 div.login-link > a {
     /*color: #11AECA;*/
     color: #88304E;
+}
+
+.no-valid {
+    border: 3px solid red;
+    border-radius: 1rem;
+    box-shadow: 0 0 0 0.2rem red;
+    outline: none;
 }

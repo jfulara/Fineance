@@ -75,13 +75,13 @@ function OperationHistory() {
                     <p>Witaj {user.name}!</p>
                 </div>
                 <ul className="active">
-                    <li><Link to="/" className="first">Podsumowanie<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link to="/history" className="active">Historia operacji<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link>Analiza budżetu<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link>Oszczędzanie<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link>Cele miesięczne<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link>Stałe wydatki<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link>Statystyki<i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/" className="first"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/history" className="active"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/savings"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link><p>Statystyki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                 </ul>
                 <div className="buttons">
                     <button className="technical-help">Pomoc techniczna</button>
@@ -114,64 +114,66 @@ function OperationHistory() {
             <main className="history-main">
                 <section className="history">
                     <h1>Historia operacji</h1>
-                    <div className="search-bar">
-                        <input
-                            type="text"
-                            placeholder="Szukaj po tytule operacji..."
-                            value={titleFilter}
-                            onChange={e => setTitleFilter(e.target.value)}
-                        />
-                    </div>
-                    <div className="operations-list">
-                        {operations.length === 0 ? (
-                            <p>Brak operacji do wyświetlenia</p>
-                        ) : (
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th className="date">Data</th>
-                                    <th className="title">Tytuł</th>
-                                    <th>Kategoria</th>
-                                    <th className="th-last">
-                                        Kwota
-                                        <span onClick={() => setDropdownOpen((open) => !open)}>
-                                            <FontAwesomeIcon icon={faChevronDown} />
-                                        </span>
-                                        {dropdownOpen && (
-                                            <ul>
-                                                {dropdownOptions.map(opt => (
-                                                    <li key={opt.value}
-                                                        style={{
-                                                            background: typeFilter === opt.value ? '#333' : 'transparent',
-                                                            fontWeight: typeFilter === opt.value ? 'bold' : 'normal'
-                                                        }}
-                                                        onClick={() => handleDropdownSelect(opt.value)}
-                                                    >
-                                                        {opt.label}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {operations.map(op => (
-                                    <tr key={`${op.type}-${op.id}`}>
-                                        <td className="date">{new Date(op.date).toLocaleDateString()}</td>
-                                        <td className="title">{op.title}</td>
-                                        <td>{op.category}</td>
-                                        <td className={`td-last ${op.type === 'INCOME' ? "income" : "expense"}`}>
-                                            <i>{op.amount.toFixed(2)} </i> PLN
-                                        </td>
+                    <div className="history-content">
+                        <div className="search-bar">
+                            <input
+                                type="text"
+                                placeholder="Szukaj po tytule operacji..."
+                                value={titleFilter}
+                                onChange={e => setTitleFilter(e.target.value)}
+                            />
+                        </div>
+                        <div className="operations-list">
+                            {operations.length === 0 ? (
+                                <p>Brak operacji do wyświetlenia</p>
+                            ) : (
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th className="date">Data</th>
+                                        <th className="title">Tytuł</th>
+                                        <th>Kategoria</th>
+                                        <th className="th-last">
+                                            Kwota
+                                            <span onClick={() => setDropdownOpen((open) => !open)}>
+                                                <FontAwesomeIcon icon={faChevronDown} />
+                                            </span>
+                                            {dropdownOpen && (
+                                                <ul>
+                                                    {dropdownOptions.map(opt => (
+                                                        <li key={opt.value}
+                                                            style={{
+                                                                background: typeFilter === opt.value ? '#333' : 'transparent',
+                                                                fontWeight: typeFilter === opt.value ? 'bold' : 'normal'
+                                                            }}
+                                                            onClick={() => handleDropdownSelect(opt.value)}
+                                                        >
+                                                            {opt.label}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </th>
                                     </tr>
-                                ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    {operations.map(op => (
+                                        <tr key={`${op.type}-${op.id}`}>
+                                            <td className="date">{new Date(op.date).toLocaleDateString()}</td>
+                                            <td className="title">{op.title}</td>
+                                            <td>{op.category}</td>
+                                            <td className={`td-last ${op.type === 'INCOME' ? "income" : "expense"}`}>
+                                                <i>{op.amount.toFixed(2)} </i> PLN
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
 
-                        )}
-                    </div>
-                    <div className="filler">
+                            )}
+                        </div>
+                        <div className="filler">
+                        </div>
                     </div>
                 </section>
             </main>

@@ -1,0 +1,154 @@
+.savings-grid {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 5vw;
+    row-gap: 10vh;
+    margin: 5vh 7vw;
+}
+
+.saving-card {
+    background: #242424;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    height: 32vh;
+    width: 18vw;
+    color: #dddddd;
+}
+
+.saving-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px 4px rgba(0, 0, 0, 0.5);
+    /*color: #F7374F60;*/
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+.saving-card.add-card {
+    background: #242424;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #dddddd;
+}
+
+.saving-card.add-card:hover {
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+.saving-card.add-card:hover .fa-circle-plus {
+    transform: rotate(90deg);
+    transition: all 0.25s ease;
+}
+
+.saving-card.add-card .fa-circle-plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    color: #272727;
+    margin: 0.75rem;
+    transform: rotate(0deg);
+    transition: all 0.25s ease;
+}
+
+.saving-card.add-card .fa-circle-plus > svg {
+    border: 4px solid #dddddd;
+    border-radius: 50%;
+    background-color: #dddddd;
+    font-size: 1rem;
+}
+
+.saving-card.add-card:hover .fa-circle-plus > svg {
+    /*border: 4px solid #88304E;*/
+    /*border: 4px solid #F7374F01;*/
+    /*background-color: #88304E;*/
+    /*background-color: #F7374F60;*/
+}
+
+.saving-card.add-card p {
+    font-size: 20px;
+    font-weight: normal;
+    margin: 0.75rem;
+    transition: all 0.25s ease;
+}
+
+.saving-card.add-card:hover p {
+    /*color: #88304E;*/
+    /*color: #F7374F60;*/
+}
+
+/* Obraz na karcie */
+.card-image {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f0f0;
+}
+
+/* Zawartość karty */
+.card-info {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-text h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.card-text p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Pasek postępu */
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    /*background-color: #dddddd;*/
+    background-color: #F7374F20;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    /*background: linear-gradient(90deg, #88304E 0%, #F7374F 100%);*/
+    background: linear-gradient(90deg, #F7374F20 0%, #F7374F 100%);
+    transition: width 0.8s ease;
+}
+/*
+@media (max-width: 768px) {
+    .savings-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .saving-card {
+        height: 240px;
+    }
+
+    .card-image {
+        height: 110px;
+    }
+}
+*/

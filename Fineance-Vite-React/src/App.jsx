@@ -11,6 +11,10 @@ import AddIncome from './views/AddIncome'
 import AddExpense from './views/AddExpense'
 import OperationHistory from './views/OperationHistory'
 import Docs from './views/Docs'
+import SavingsList from './views/SavingsList'
+import AddSaving from './views/AddSaving'
+import SavingDetails from './views/SavingDetails'
+import EditSaving from './views/EditSaving'
 import './styles/App.css'
 import { AuthProvider } from './contexts/AuthContext'
 import PrivateRoute from './routes/PrivateRoute';
@@ -31,6 +35,10 @@ function App() {
                         <Route path="/addIncome" element={<AddIncome />} />
                         <Route path="/addExpense" element={<AddExpense />} />
                         <Route path="/history" element={<OperationHistory />} />
+                        <Route path="/savings" element={<SavingsList />} />
+                        <Route path="/savings/add" element={<AddSaving />} />
+                        <Route path="/savings/:id" element={<SavingDetails />} />
+                        <Route path="/savings/:id/edit" element={<EditSaving />} />
                     </Route>
                     <Route element={<AdminRoute />} >
                         <Route path="/users" element={<UsersList />} />
