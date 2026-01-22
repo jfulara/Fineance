@@ -10,6 +10,8 @@ import com.example.Fineance.services.ExpenseService;
 import com.example.Fineance.services.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.math.BigDecimal;
@@ -26,7 +28,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/operations")
 public class OperationController {
     private final ExpenseService expenseService;
+
     private final IncomeService incomeService;
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -75,7 +79,8 @@ public class OperationController {
     })
     @PostMapping("/addIncome")
     public ResponseEntity<Income> addIncome(
-            @RequestBody(description = "Dane nowego wpływu", required = true) @org.springframework.web.bind.annotation.RequestBody AddOperationDTO addIncome) {
+            @RequestBody(description = "Dane nowego wpływu", required = true)
+            @org.springframework.web.bind.annotation.RequestBody AddOperationDTO addIncome) {
         Optional<User> user = userRepository.findById(addIncome.getId_user());
         if (user.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -166,8 +171,48 @@ public class OperationController {
         }
 
         List<OperationDTO> filtered = result.stream()
-                .sorted((a, b) -> b.getDate().compareTo(a.getDate()))
+                .sorted(Comparator.comparing(OperationDTO::getDate).reversed()
+                        .thenComparing(Comparator.comparing(OperationDTO::getId).reversed()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(filtered);
+    }
+
+    @DeleteMapping("/{id_operation}")
+    public ResponseEntity<Void> deleteOperation(
+            @RequestBody(description = "Typ operacji: INCOME lub EXPENSE", required = true)
+            @org.springframework.web.bind.annotation.RequestBody Map<String, String> payload,
+            @Parameter(description = "ID operacji do usunięcia", required = true) @PathVariable Long id_operation,
+            @Parameter(description = "ID użytkownika", required = true) @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
+
+        Long id_user = user.getId_user();
+
+        String type = payload.get("type");
+
+        if (type.equals("INCOME")) {
+            Optional<Income> income = incomeService.getIncomeById(id_operation);
+            if (income.isPresent() && income.get().getUser().getId_user().equals(id_user)) {
+                incomeService.deleteIncome(income.get().getId_income());
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else if (type.equals("EXPENSE")) {
+            Optional<Expense> expense = expenseService.getExpenseById(id_operation);
+            if (expense.isPresent() && expense.get().getUser().getId_user().equals(id_user)) {
+                expenseService.deleteExpense(expense.get().getId_expense());
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

@@ -13,33 +13,27 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
+
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    public JwtFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String path = request.getRequestURI();
-        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.equals("/api/docs") ||
-            path.equals("/api/auth/login") || path.equals("/api/auth/register") ||
-            path.equals("/api/auth/refresh") || path.equals("/api/auth/logout")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         String accessToken = null;
         String refreshToken = null;
@@ -54,8 +48,8 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        if ((accessToken == null || jwtService.isTokenExpired(accessToken)) && refreshToken != null) {
-            try {
+        try {
+            if ((accessToken == null || jwtService.isTokenExpired(accessToken)) && refreshToken != null) {
                 String username = jwtService.extractUsername(refreshToken);
 
                 if (jwtService.isTokenValid(refreshToken, username)) {
@@ -63,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     ResponseCookie newAccessCookie = ResponseCookie.from("accessToken", newAccessToken)
                             .httpOnly(true)
-                            .secure(false) // Zmień na true w produkcji z https
+                            .secure(false)
                             .path("/")
                             .maxAge(15 * 60)
                             .sameSite("Lax")
@@ -72,12 +66,9 @@ public class JwtFilter extends OncePerRequestFilter {
                     response.addHeader(HttpHeaders.SET_COOKIE, newAccessCookie.toString());
                     accessToken = newAccessToken;
                 }
-            } catch (Exception e) {;
             }
-        }
 
-        if (accessToken != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
+            if (accessToken != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String username = jwtService.extractUsername(accessToken);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -87,8 +78,9 @@ public class JwtFilter extends OncePerRequestFilter {
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
-            } catch (Exception e) {
             }
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

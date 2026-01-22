@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,19 +25,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 @WebMvcTest(HomeController.class)
+@Import(AuthControllerTest.TestConfig.class)
 class HomeControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+
+    @Autowired
     private UserService userService;
-    @MockBean
+
+    @Autowired
     private IncomeService incomeService;
-    @MockBean
+
+    @Autowired
     private ExpenseService expenseService;
-    @MockBean
-    private com.example.Fineance.services.JwtService jwtService;
-    @MockBean
-    private com.example.Fineance.security.JwtFilter jwtFilter;
 
     @Test
     void getHomeInfo_shouldReturnOk() throws Exception {
@@ -51,6 +53,24 @@ class HomeControllerTest {
         mockMvc.perform(get("/api/home")
                 .with(user("test@example.com")))
                 .andExpect(status().isOk());
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public UserService userService() {
+            return Mockito.mock(UserService.class);
+        };
+
+        @Bean
+        public IncomeService incomeService() {
+            return Mockito.mock(IncomeService.class);
+        };
+
+        @Bean
+        public ExpenseService expenseService() {
+            return Mockito.mock(ExpenseService.class);
+        };
     }
 }
 

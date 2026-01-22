@@ -22,14 +22,13 @@ public class Saving {
     @Column(precision = 19, scale = 2)
     private BigDecimal goal;
 
-    // Przechowuj obraz jako BLOB (Binary Large Object)
     @Lob
     @JdbcTypeCode(SqlTypes.BINARY)
     @Column(columnDefinition = "BYTEA", name = "image_data")
     private byte[] imageData;
 
     @Column(name = "content_type")
-    private String contentType; // np. "image/jpeg"
+    private String contentType;
 
     @Column(nullable = false, name = "created_at")
     private LocalDate createdAt;

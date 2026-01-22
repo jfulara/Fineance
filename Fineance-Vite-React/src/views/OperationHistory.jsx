@@ -2,13 +2,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faChevronDown, faTrashCan, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { fetchWithAuth } from '../utils/fetchWithAuth';
+import '../styles/style.css';
+import '../styles/operations.css';
 
 function OperationHistory() {
     const navigate = useNavigate();
     const { logout, user } = useContext(AuthContext);
     const [operations, setOperations] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [titleFilter, setTitleFilter] = useState("");
     const [debouncedFilter, setDebouncedFilter] = useState(titleFilter);
     const [typeFilter, setTypeFilter] = useState('ALL');
@@ -33,10 +36,10 @@ function OperationHistory() {
         };
     }, [titleFilter]);
 
-    useEffect(() => {
+    const fetchOperations = async (signal) => {
         const params = new URLSearchParams();
         params.append("id_user", user.id_user);
-        if (titleFilter !== "") {
+        if (debouncedFilter !== "") {
             params.append("title", debouncedFilter);
         }
         if (typeFilter !== 'ALL') {
@@ -47,7 +50,8 @@ function OperationHistory() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include'
+            credentials: 'include',
+            signal
         }, navigate, logout)
             .then(res => {
                 if (!res.ok) throw new Error('Błąd serwera: ' + res.status);
@@ -55,15 +59,59 @@ function OperationHistory() {
             })
             .then(data => setOperations(data))
             .catch(err => {
+                if (err.name === 'AbortError') return;
                 console.error('Błąd pobierania danych:', err);
                 navigate('/login');
+            })
+            .finally(() => {
+                const timer = setTimeout(() => {
+                    setLoading(false);
+                }, 750);
+                return () => clearTimeout(timer);
             });
+    };
+
+    useEffect(() => {
+        const controller = new AbortController();
+        fetchOperations(controller.signal);
+        return () => {
+            controller.abort();
+        };
     }, [debouncedFilter, typeFilter]);
+
+    const handleDelete = async(id_operation, type) => {
+        if (!window.confirm('Czy na pewno chcesz usunąć tą operację?')) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/operations/${id_operation}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({type})
+            });
+
+            if (!response.ok) throw new Error('Błąd usuwania');
+            await fetchOperations();
+        } catch (err) {
+            alert('Błąd: ' + err.message);
+        }
+    };
 
     const handleLogout = async () => {
         await logout();
         navigate('/login');
     };
+
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Fineance</p>
+                <i><FontAwesomeIcon icon={faSpinner} /></i>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -77,7 +125,7 @@ function OperationHistory() {
                 <ul className="active">
                     <li><Link to="/" className="first"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/history" className="active"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/budget-analysis"><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/savings"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
@@ -129,41 +177,48 @@ function OperationHistory() {
                             ) : (
                                 <table>
                                     <thead>
-                                    <tr>
-                                        <th className="date">Data</th>
-                                        <th className="title">Tytuł</th>
-                                        <th>Kategoria</th>
-                                        <th className="th-last">
-                                            Kwota
-                                            <span onClick={() => setDropdownOpen((open) => !open)}>
-                                                <FontAwesomeIcon icon={faChevronDown} />
-                                            </span>
-                                            {dropdownOpen && (
-                                                <ul>
-                                                    {dropdownOptions.map(opt => (
-                                                        <li key={opt.value}
-                                                            style={{
-                                                                background: typeFilter === opt.value ? '#333' : 'transparent',
-                                                                fontWeight: typeFilter === opt.value ? 'bold' : 'normal'
-                                                            }}
-                                                            onClick={() => handleDropdownSelect(opt.value)}
-                                                        >
-                                                            {opt.label}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </th>
-                                    </tr>
+                                        <tr>
+                                            <th className="date">Data</th>
+                                            <th className="title">Tytuł</th>
+                                            <th className="category">Kategoria</th>
+                                            <th className="th-last">
+                                                Kwota
+                                                <span onClick={() => setDropdownOpen((open) => !open)}>
+                                                    <FontAwesomeIcon icon={faChevronDown} />
+                                                </span>
+                                                {dropdownOpen && (
+                                                    <ul>
+                                                        {dropdownOptions.map(opt => (
+                                                            <li key={opt.value}
+                                                                style={{
+                                                                    background: typeFilter === opt.value ? '#333' : 'transparent',
+                                                                    fontWeight: typeFilter === opt.value ? 'bold' : 'normal'
+                                                                }}
+                                                                onClick={() => handleDropdownSelect(opt.value)}
+                                                            >
+                                                                {opt.label}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </th>
+                                            <th></th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     {operations.map(op => (
                                         <tr key={`${op.type}-${op.id}`}>
                                             <td className="date">{new Date(op.date).toLocaleDateString()}</td>
                                             <td className="title">{op.title}</td>
-                                            <td>{op.category}</td>
+                                            <td className="category">{op.category}</td>
                                             <td className={`td-last ${op.type === 'INCOME' ? "income" : "expense"}`}>
                                                 <i>{op.amount.toFixed(2)} </i> PLN
+                                            </td>
+                                            <td
+                                                className="btn-delete-operation"
+                                                onClick={() => handleDelete(op.id, op.type)}
+                                            >
+                                                <i className="fa-trash-can"><FontAwesomeIcon icon={faTrashCan} /></i>
                                             </td>
                                         </tr>
                                     ))}

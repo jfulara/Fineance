@@ -10,6 +10,7 @@ import Messages from './views/Messages'
 import AddIncome from './views/AddIncome'
 import AddExpense from './views/AddExpense'
 import OperationHistory from './views/OperationHistory'
+import BudgetAnalysis from './views/BudgetAnalysis'
 import Docs from './views/Docs'
 import SavingsList from './views/SavingsList'
 import AddSaving from './views/AddSaving'
@@ -35,6 +36,7 @@ function App() {
                         <Route path="/addIncome" element={<AddIncome />} />
                         <Route path="/addExpense" element={<AddExpense />} />
                         <Route path="/history" element={<OperationHistory />} />
+                        <Route path="/budget-analysis" element={<BudgetAnalysis />} />
                         <Route path="/savings" element={<SavingsList />} />
                         <Route path="/savings/add" element={<AddSaving />} />
                         <Route path="/savings/:id" element={<SavingDetails />} />

@@ -1,0 +1,200 @@
+.top {
+    height: 10vh;
+}
+
+.top > h1 {
+    font-size: 2rem;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.left-side {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.comparisons {
+    height: 42rem;
+    width: 32rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background: #242424;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
+}
+
+.comparisons > div {
+    height: 9rem;
+    width: 25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #F7374FBB;
+    border-radius: 1rem;
+    background: #2C2C2C;
+    /*box-shadow: 0 0 10px 0 rgba(247, 55, 79, 0.67);*/
+}
+
+.comparisons > div > h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0 2rem;
+    margin: 0.25rem;
+}
+
+.comparisons > div > h2 {
+    font-size: 2rem;
+    font-weight: normal;
+    text-align: center;
+    padding: 0 2rem;
+    margin: 0.5rem;
+}
+
+.comparisons > .balance-box > h2 {
+    font-size: 2.5rem;
+    color: #F7374FAA;
+}
+
+.income-to-expense-positive > h2,
+.months-comparison-positive > h2 {
+    color: #41B445;
+}
+
+.income-to-expense-negative > h2,
+.months-comparison-negative > h2{
+    color: #BF1A2F;
+}
+
+.right-side {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-side > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 2rem;
+    height: 27rem;
+    width: 27rem;
+    margin: 2rem ;
+    background-color: #242424;
+}
+
+.right-side .summary-header {
+    width: 16vw;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 0 0.5vw;
+    margin: 1rem 1rem 0.5rem 1rem;
+}
+
+.summary-header > h1 {
+    font-size: 24px;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.right-side > div > ul {
+    display: flex;
+    padding: 0.5rem 1rem 1rem 1rem;
+    list-style-type: none;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.right-side > div > ul > li > a {
+    width: 16vw;
+    border-style: none none solid none;
+    border-width: 1px;
+    padding: 1.5vh 0.5vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #dddddd;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.right-side > div > ul > li > a.first {
+    border-style: solid none solid none;
+    color: #dddddd;
+}
+
+.right-side > div > ul > li > a:hover {
+    text-shadow: 0 0 8px #ddddddBB;
+}
+
+.right-side > div > ul > li > a span,
+.right-side > div > ul > li > a .icon {
+    transition: all 0.25s ease;
+}
+
+.right-side > div > ul > li > a:hover .category-name {
+    transform: translateX(5px);
+}
+
+.right-side > div > ul > li > a:hover .category-amount {
+    transform: translateX(-5px);
+}
+
+.right-side > div > ul > li > a:hover .icon {
+    transform: translateX(-5px);
+}
+
+.incomes-window a {
+    border-color: #41B445;
+}
+
+.expenses-window a {
+    border-color: #BF1A2F;
+}
+
+div.category {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 15vw;
+}
+
+.right-side > div.incomes-window {
+    border: 2px solid #41B445;
+    box-shadow: 0 0 10px 0 rgba(65, 180, 69, 1);
+}
+
+.incomes-window > h1,
+.expenses-window > h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin: 1rem 1rem 0.5rem 1rem;
+}
+
+.right-side > div.expenses-window {
+    border: 2px solid #BF1A2F;
+    box-shadow: 0 0 10px 0 rgba(191, 26, 47, 1);
+}

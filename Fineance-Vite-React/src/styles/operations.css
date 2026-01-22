@@ -56,7 +56,7 @@
 
 .search-bar input:focus {
     outline: none;
-    box-shadow: 0 0 10px 0 rgba(247, 55, 79, 0.67);
+    box-shadow: 0 0 12px 0 rgba(247, 55, 79, 0.67);
 }
 
 .operations-list {
@@ -79,20 +79,51 @@
     margin: 0 2rem;
     border-collapse: collapse;
     font-family: "Open Sans", sans-serif;
-    font-size: 0.875rem;
+    font-size: 14px;
+}
+
+.btn-delete-operation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #F7374FBB;
+    cursor: pointer;
+    width: 2.5rem;
+    height: 37px;
+    transition: all 0.25s ease;
+}
+
+.btn-delete-operation i {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-delete-operation:hover {
+    transform: translateY(-2px);
 }
 
 .operations-list > table tr {
-    border-bottom: 1px solid #dddddd60;
+    border-bottom: 1px solid #F7374FBB;
     height: 2.5rem;
+}
+
+.operations-list > table thead tr {
+    border: none;
+}
+
+.operations-list > table tr .date {
+    width: 12.5%;
 }
 
 .operations-list > table tr .title {
     width: 50%;
 }
 
-.operations-list > table tr .date {
-    width: 12.5%;
+.operations-list > table tr .category {
+    width: 17.5%;
 }
 
 .operations-list > table th {
@@ -102,10 +133,12 @@
     top: 0;
     background: #242424;
     z-index: 2;
+    box-shadow: inset 0 -1px 0 rgba(247, 55, 79, 1);
 }
 
 .operations-list > table th.th-last {
     text-align: right;
+    width: 16.5%;
 }
 
 .th-last > span {
@@ -165,8 +198,6 @@ div.filler {
     height: 6rem;
     background: #242424;
 }
-
-
 
 section.expenses, section.incomes {
     display: flex;

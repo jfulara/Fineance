@@ -42,7 +42,7 @@ public class HomeController {
 
     @Operation(
         summary = "Pobiera dane do strony głównej użytkownika",
-        description = "Zwraca podsumowanie przychodów, wydatków i kategorii dla zalogowanego użytkownika."
+        description = "Zwraca podsumowanie wpływów, wydatków i kategorii dla zalogowanego użytkownika."
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Dane zwrócone poprawnie"),
@@ -52,7 +52,8 @@ public class HomeController {
     @GetMapping
     public ResponseEntity<HomeDTO> getHomeInfo(
             @Parameter(description = "Dane uwierzytelnionego użytkownika", required = true)
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails)
+    {
         if (userDetails == null) {
             return ResponseEntity.status(401).build();
         }
@@ -69,11 +70,19 @@ public class HomeController {
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        BigDecimal allTimeIncome = incomeService.getTotalIncomeByUser(user.getId_user());
+        BigDecimal allTimeExpense = expenseService.getTotalExpenseByUser(user.getId_user());
+        BigDecimal balance = allTimeIncome.subtract(allTimeExpense);
+
+        BigDecimal lastMonthIncome = incomeService.getLastMonthIncomeByUser(user.getId_user());
+        BigDecimal lastMonthExpense = expenseService.getLastMonthExpenseByUser(user.getId_user());
+        BigDecimal lastMonthBalance = lastMonthIncome.subtract(lastMonthExpense);
+
         List<CategorySummaryDTO> incomeCategorySummaries = incomeService.getTopIncomeCategoriesByCurrentMonth(user.getId_user(), 4);
         List<CategorySummaryDTO> expenseCategorySummaries = expenseService.getTopExpenseCategoriesByCurrentMonth(user.getId_user(), 4);
 
         HomeDTO homeDTO = new HomeDTO(incomes, expenses, totalIncome.doubleValue(), totalExpense.doubleValue(),
-                incomeCategorySummaries, expenseCategorySummaries);
+                incomeCategorySummaries, expenseCategorySummaries, balance.doubleValue(), lastMonthBalance.doubleValue());
         return ResponseEntity.ok(homeDTO);
     }
 }

@@ -22,10 +22,10 @@ main.security-main {
     flex-direction: row;
     color: #dddddd;
     border-radius: 75px;
-    border-image: linear-gradient(to bottom, #F7374F, #88304E);
+    border-image: linear-gradient(135deg, #F7374F, #F7374F20);
     border: 5px solid transparent;
     background: linear-gradient(#242424, #242424) padding-box,
-    linear-gradient(to bottom, #F7374F, #88304E) border-box;
+    linear-gradient(135deg, #F7374F, #F7374F20) border-box;
 }
 
 .logo-side {
@@ -79,7 +79,7 @@ main.security-main {
 }
 
 .form-side div.messages {
-    height: 2rem;
+    height: 3rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -107,6 +107,7 @@ main.security-main {
 form.login {
     height: 26rem;
     display: flex;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
 }
@@ -114,25 +115,94 @@ form.login {
 form.register {
     height: 35rem;
     display: flex;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
 }
 
-.form-side input {
+/*.form-side input {
     width: 27rem;
     height: 4rem;
     border-radius: 20px;
     background: #2C2C2C;
-    border: 3px solid #dddddd;
+    border: 3px solid #F7374FBB;
     text-align: center;
     font-family: "Average Sans";
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     color: #dddddd;
+}*/
+
+.login .auth-input {
+    margin-bottom: 26px;
+}
+
+.auth-input {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-input input {
+    width: 100%;
+    height: 4rem;
+    padding: 12px;
+    background: #2C2C2C;
+    font-size: 15px;
+    font-weight: 600;
+    box-sizing: border-box;
+    border: 2px solid #F7374FBB;
+    border-radius: 1rem;
+    color: #dddddd;
+    transition: all 0.1s ease;
+    text-align: center;
+}
+
+.auth-input input:focus {
+    outline: none;
+    box-shadow: 0 0 12px 0 rgba(247, 55, 79, 0.67);
+}
+
+.auth-input small {
+    height: 1rem;
+    color: #FF0000;
+    font-size: 12px;
+    padding: 5px;
+    text-align: center;
 }
 
 .button-background {
+    width: 90%;
+    height: 3rem;
+    border-radius: 1rem;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    font-family: "Calistoga";
+}
+
+.special-button {
+    padding: 12px;
+    border: none;
+    border-radius: 1rem;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    transition: all 0.25s ease;
+    width: 100%;
+    height: 3rem;
+    background: #F7374F;
+    pointer-events: all;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+}
+
+/*.button-background {
     width: 27.625rem;
     height: 4rem;
     border-radius: 20px;
@@ -162,7 +232,7 @@ form.register {
     cursor: pointer;
     position: relative;
     z-index: 0;
-}
+}*/
 
 .special-button:before {
     content: '';
@@ -178,7 +248,7 @@ form.register {
     animation: glowing 20s linear infinite;
     opacity: 0;
     transition: opacity .3s ease-in-out;
-    border-radius: 20px;
+    border-radius: 1rem;
 }
 
 .special-button:active {
@@ -202,7 +272,7 @@ form.register {
     background: #F7374F;
     left: 0;
     top: 0;
-    border-radius: 20px;
+    border-radius: 1rem;
 }
 
 .special-button:focus {
@@ -220,37 +290,24 @@ form.register {
     100% { background-position: 0 0; }
 }
 
-div.register-link {
-    display: flex;
-    flex-direction: row;
-    margin: 1rem 0;
-    font-size: 15px;
-}
-
-div.register-link > p {
-    margin: 0;
-}
-
-div.register-link > a {
-    /*color: #11AECA;*/
-    color: #88304E;
-}
-
-div.login-link {
+div.register-link,
+div.login-link{
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin: 0;
     font-size: 15px;
+    margin-bottom: 3rem;
 }
 
-div.login-link > p {
+div.register-link > p,
+div.login-link > p{
     margin: 0;
 }
 
-div.login-link > a {
-    /*color: #11AECA;*/
-    color: #88304E;
+div.register-link > a,
+div.login-link > a{
+    color: #F7374FBB;
 }
 
 .no-valid {

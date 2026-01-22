@@ -2,14 +2,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
-import '../styles/operations.css';
+import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { fetchWithAuth } from '../utils/fetchWithAuth';
+import '../styles/style.css';
+import '../styles/home.css';
 
 function Home() {
     const navigate = useNavigate();
     const { logout, user } = useContext(AuthContext);
     const [homeData, setHomeData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchWithAuth('http://localhost:8080/api/home', {
@@ -24,6 +26,12 @@ function Home() {
             })
             .catch(err => {
                 console.error('Błąd pobierania danych:', err);
+            })
+            .finally(() => {
+                const timer = setTimeout(() => {
+                    setLoading(false);
+                }, 750);
+                return () => clearTimeout(timer);
             });
     }, []);
 
@@ -33,6 +41,16 @@ function Home() {
     };
 
     const isDiffPositive = (homeData && homeData.totalIncome - homeData.totalExpense) > 0;
+    const isComparisonPositive = (homeData && homeData.totalIncome - homeData.totalExpense - homeData.lastMonthBalance) > 0;
+
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Fineance</p>
+                <i><FontAwesomeIcon icon={faSpinner} /></i>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -46,7 +64,7 @@ function Home() {
                 <ul className="active">
                     <li><Link to="/" className="first active"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/history"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/budget-analysis"><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/savings"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
@@ -91,18 +109,34 @@ function Home() {
                 <section className="bottom">
                     <section className="left-side">
                         <div className="comparisons">
+                            <div className="balance-box">
+                                <h1>Saldo konta:</h1>
+                                <h2>
+                                    {homeData ? (homeData.balance).toFixed(2) : '0.00'} zł
+                                </h2>
+                            </div>
                             <div className={`income-to-expense-${isDiffPositive ? 'positive' : 'negative'}`}>
-                                <h1>Twój stosunek wpływów do wydatków w tym miesiącu to:</h1>
+                                <h1>Stosunek wpływów do wydatków w tym miesiącu:</h1>
                                 <h2>
                                     {isDiffPositive ? '+' : ''}
                                     {homeData ? (homeData.totalIncome - homeData.totalExpense).toFixed(2) : '0.00'} zł
+                                </h2>
+                            </div>
+                            <div className={`months-comparison-${isComparisonPositive ? 'positive' : 'negative'}`}>
+                                <h1>Bilans względem poprzedniego miesiąca:</h1>
+                                <h2>
+                                    {isComparisonPositive ? '+' : ''}
+                                    {homeData ? (homeData.totalIncome - homeData.totalExpense - homeData.lastMonthBalance).toFixed(2) : '0.00'} zł
                                 </h2>
                             </div>
                         </div>
                     </section>
                     <section className="right-side">
                         <div className="incomes-window">
-                            <h1>Wpływy: {homeData ? homeData.totalIncome.toFixed(2) : '0.00'} zł</h1>
+                            <div className="summary-header">
+                                <h1>Wpływy: </h1>
+                                <h1>{homeData ? homeData.totalIncome.toFixed(2) : '0.00'} zł</h1>
+                            </div>
                             <ul>
                                 {homeData && Array.isArray(homeData.incomeCategorySummaries) && homeData.incomeCategorySummaries.map((category, index) => (
                                 <li key={index}>
@@ -120,7 +154,10 @@ function Home() {
                             </ul>
                         </div>
                         <div className="expenses-window">
-                            <h1>Wydatki: {homeData ? homeData.totalExpense.toFixed(2) : '0.00'} zł</h1>
+                            <div className="summary-header">
+                                <h1>Wydatki: </h1>
+                                <h1>{homeData ? homeData.totalExpense.toFixed(2) : '0.00'} zł</h1>
+                            </div>
                             <ul>
                                 {homeData && Array.isArray(homeData.expenseCategorySummaries) && homeData.expenseCategorySummaries.map((category, index) => (
                                     <li key={index}>

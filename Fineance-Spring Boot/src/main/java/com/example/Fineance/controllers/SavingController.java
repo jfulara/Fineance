@@ -26,12 +26,15 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/savings")
 public class SavingController {
+    private final SavingService savingService;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private SavingService savingService;
-
-    @Autowired
-    private UserRepository userRepository;
+    public SavingController(SavingService savingService, UserRepository userRepository) {
+        this.savingService = savingService;
+        this.userRepository = userRepository;
+    }
 
     private String toDataUri(byte[] imageData, String contentType) {
         if (imageData == null || imageData.length == 0) {
@@ -44,7 +47,7 @@ public class SavingController {
 
     @Operation(
         summary = "Pobierz wszystkie cele oszczędnościowe użytkownika",
-        description = "Zwraca listę celów oszczędnościowych dla zalogowanego użytkownika bez danych binarnych (hasImage flag)"
+        description = "Zwraca listę celów oszczędnościowych dla zalogowanego użytkownika"
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Lista celów zwrócona pomyślnie"),
@@ -59,7 +62,7 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         List<SavingDTO> savings = savingService.getAllSavingsByUser(user.getId_user())
                 .stream()
@@ -78,7 +81,7 @@ public class SavingController {
 
     @Operation(
         summary = "Pobierz szczegóły konkretnego celu",
-        description = "Zwraca pełne informacje o celu (bez binarnych danych obrazu)"
+        description = "Zwraca pełne informacje o celu"
     )
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Szczegóły celu zwrócone"),
@@ -95,10 +98,10 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         Saving saving = savingService.getSavingById(id_saving)
-                .orElseThrow(() -> new RuntimeException("Saving not found"));
+                .orElseThrow(() -> new RuntimeException("Cel nie znaleziony"));
 
         if (!saving.getUser().getId_user().equals(user.getId_user())) {
             return ResponseEntity.status(403).build();
@@ -118,7 +121,7 @@ public class SavingController {
 
     @Operation(
         summary = "Edytuj cel oszczędnościowy",
-        description = "Edytuje cel oszczędnościowy dla zalogowanego użytkownika"
+        description = "Edytuje cel oszczędnościowy zalogowanego użytkownika"
     )
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Cel zaktualizowany pomyślnie"),
@@ -137,10 +140,10 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         Saving saving = savingService.getSavingById(id_saving)
-                .orElseThrow(() -> new RuntimeException("Saving not found"));
+                .orElseThrow(() -> new RuntimeException("Cel nie znaleziony"));
 
         if (!saving.getUser().getId_user().equals(user.getId_user())) {
             return ResponseEntity.status(403).build();
@@ -221,7 +224,7 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         if (savingService.getAllSavingsByUser(user.getId_user()).size() > 5) {
             return ResponseEntity.badRequest().body("Możesz mieć maksymalnie 6 celów oszczędnościowych!");
@@ -291,10 +294,10 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         Saving saving = savingService.getSavingById(id_saving)
-                .orElseThrow(() -> new RuntimeException("Saving not found"));
+                .orElseThrow(() -> new RuntimeException("Cel nie znaleziony"));
 
         if (!saving.getUser().getId_user().equals(user.getId_user())) {
             return ResponseEntity.status(403).build();
@@ -303,7 +306,6 @@ public class SavingController {
         BigDecimal amount = new BigDecimal(request.get("amount").toString());
         BigDecimal newAmount = saving.getAmount().add(amount);
 
-        // Upewnij się, że nie przekrocz limitu
         if (newAmount.compareTo(saving.getGoal()) > 0) {
             newAmount = saving.getGoal();
         }
@@ -333,10 +335,10 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         Saving saving = savingService.getSavingById(id_saving)
-                .orElseThrow(() -> new RuntimeException("Saving not found"));
+                .orElseThrow(() -> new RuntimeException("Cel nie znaleziony"));
 
         if (!saving.getUser().getId_user().equals(user.getId_user())) {
             return ResponseEntity.status(403).build();
@@ -345,7 +347,6 @@ public class SavingController {
         BigDecimal amount = new BigDecimal(request.get("amount").toString());
         BigDecimal newAmount = saving.getAmount().subtract(amount);
 
-        // Upewnij się, że nie zejdź poniżej zera
         if (newAmount.compareTo(BigDecimal.ZERO) < 0) {
             newAmount = BigDecimal.ZERO;
         }
@@ -362,7 +363,7 @@ public class SavingController {
 
     @Operation(
         summary = "Usuń cel oszczędnościowy",
-        description = "Usuwa cel oszczędnościowy wraz z jego obrazem"
+        description = "Usuwa cel oszczędnościowy użytkownika"
     )
     @DeleteMapping("/{id_saving}")
     public ResponseEntity<?> deleteSaving(
@@ -374,10 +375,10 @@ public class SavingController {
         }
 
         User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie znaleziony"));
 
         Saving saving = savingService.getSavingById(id_saving)
-                .orElseThrow(() -> new RuntimeException("Saving not found"));
+                .orElseThrow(() -> new RuntimeException("Cel nie znaleziony"));
 
         if (!saving.getUser().getId_user().equals(user.getId_user())) {
             return ResponseEntity.status(403).build();

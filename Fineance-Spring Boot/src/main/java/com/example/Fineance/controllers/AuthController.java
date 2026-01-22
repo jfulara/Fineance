@@ -8,6 +8,7 @@ import com.example.Fineance.repositories.UserRepository;
 import com.example.Fineance.services.JwtService;
 import com.example.Fineance.services.AuthService;
 import com.example.Fineance.services.TokenService;
+import com.example.Fineance.validation.ValidationOrder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,15 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.example.Fineance.security.UserDetailsServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,21 +32,21 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private final AuthService authService;
+
+    private final JwtService jwtService;
+
+    private final UserRepository userRepository;
+
+    private final TokenService tokenService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private AuthService authService;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TokenService tokenService;
+    public AuthController(AuthService authService, JwtService jwtService, UserRepository userRepository, TokenService tokenService) {
+        this.authService = authService;
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+    }
 
     @Operation(
         summary = "Logowanie użytkownika",
@@ -61,7 +58,9 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<UserDTO> login(
-            @RequestBody(description = "Dane logowania", required = true) @org.springframework.web.bind.annotation.RequestBody AuthRequest request,
+            @Validated
+            @RequestBody(description = "Dane logowania", required = true)
+            @org.springframework.web.bind.annotation.RequestBody AuthRequest request,
             HttpServletResponse response) {
         User user = authService.authenticate(request);
 
@@ -72,7 +71,7 @@ public class AuthController {
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(false) // Zmień na true w produkcji z https
+                .secure(false)
                 .path("/")
                 .maxAge(15 * 60) // 15 minut
                 .sameSite("Lax")
@@ -80,7 +79,7 @@ public class AuthController {
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(false) // Zmień na true w produkcji z https
+                .secure(false)
                 .path("/")
                 .maxAge(7 * 24 * 60 * 60) // 7 dni
                 .sameSite("Lax")
@@ -110,7 +109,9 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @RequestBody(description = "Dane rejestracyjne", required = true) @org.springframework.web.bind.annotation.RequestBody RegisterRequest request) {
+            @Validated(ValidationOrder.class)
+            @RequestBody(description = "Dane rejestracyjne", required = true)
+            @org.springframework.web.bind.annotation.RequestBody RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.ok("Zarejestrowano pomyślnie");
     }
@@ -124,14 +125,11 @@ public class AuthController {
     })
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = Arrays.stream(request.getCookies() != null ? request.getCookies() : new Cookie[]{})
+        Arrays.stream(request.getCookies() != null ? request.getCookies() : new Cookie[]{})
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElse(null);
-        if (refreshToken != null) {
-            tokenService.deleteTokenByValue(refreshToken);
-        }
+                .ifPresent(refreshToken -> tokenService.deleteTokenByValue(refreshToken));
 
         ResponseCookie expiredAccess = ResponseCookie.from("accessToken", "")
                 .httpOnly(true).path("/").maxAge(0).build();

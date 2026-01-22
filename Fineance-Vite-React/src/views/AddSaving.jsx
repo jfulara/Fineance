@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import '../styles/add-saving.css';
 import '../styles/style.css';
 import savings_default from '../assets/images/savings_default.jpg';
@@ -16,7 +16,7 @@ import savings_house from '../assets/images/savings_house.jpg';
 export default function AddSaving() {
     const navigate = useNavigate();
     const { logout, user } = useContext(AuthContext);
-    const [mode, setMode] = useState('select'); // 'select' | 'custom'
+    const [mode, setMode] = useState('select');
     const [formData, setFormData] = useState({
         title: '',
         goal: '',
@@ -158,7 +158,10 @@ export default function AddSaving() {
         } catch (error) {
             setError(error.message);
         } finally {
-            setLoading(false);
+            const timer = setTimeout(() => {
+                setLoading(false);
+            }, 750);
+            return () => clearTimeout(timer);
         }
     };
 
@@ -173,6 +176,15 @@ export default function AddSaving() {
         navigate('/login');
     };
 
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Fineance</p>
+                <i><FontAwesomeIcon icon={faSpinner} /></i>
+            </div>
+        );
+    }
+
     if (mode === 'select') {
         return (
             <>
@@ -186,7 +198,7 @@ export default function AddSaving() {
                     <ul className="active">
                         <li><Link to="/" className="first"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                         <li><Link to="/history"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                        <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                        <li><Link to="/budget-analysis"><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                         <li><Link to="/savings" className="active"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                         <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                         <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>

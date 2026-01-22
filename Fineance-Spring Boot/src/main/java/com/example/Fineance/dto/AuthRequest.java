@@ -1,25 +1,25 @@
 package com.example.Fineance.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class AuthRequest {
+    @NotBlank(message = "Uzupełnij wszystkie pola")
     private String email;
+    @NotBlank(message = "Uzupełnij wszystkie pola")
     private String password;
 
-    // Getter dla email
     public String getEmail() {
         return email;
     }
 
-    // Setter dla email
     public void setEmail(String email) {
         this.email = email;
     }
 
-    // Getter dla password
     public String getPassword() {
         return password;
     }
 
-    // Setter dla password
     public void setPassword(String password) {
         this.password = password;
     }

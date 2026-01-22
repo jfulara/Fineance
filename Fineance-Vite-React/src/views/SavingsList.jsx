@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import '../styles/savings.css';
 import '../styles/style.css';
@@ -29,7 +29,10 @@ export default function SavingsList() {
                 console.error('Błąd pobierania celów:', err);
             })
             .finally(() => {
-                setLoading(false);
+                const timer = setTimeout(() => {
+                    setLoading(false);
+                }, 750);
+                return () => clearTimeout(timer);
             });
     }, []);
 
@@ -38,8 +41,14 @@ export default function SavingsList() {
         navigate('/login');
     };
 
-    if (loading) return <div className="container"><p>Ładowanie...</p></div>;
-    //if (error) return <div className="container error"><p>Błąd: {error}</p></div>;
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Fineance</p>
+                <i><FontAwesomeIcon icon={faSpinner} /></i>
+            </div>
+        );
+    }
 
     function SavingItem({ saving }) {
         const progress = (saving.amount / saving.goal) * 100;
@@ -49,7 +58,7 @@ export default function SavingsList() {
         useEffect(() => {
             const timer = setTimeout(() => {
                 setWidth(progress + "%");
-                }, 30);
+            }, 30);
             return () => clearTimeout(timer);
         }, [progress]);
 
@@ -87,7 +96,7 @@ export default function SavingsList() {
                 <ul className="active">
                     <li><Link to="/" className="first"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/history"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/budget-analysis"><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/savings" className="active"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>

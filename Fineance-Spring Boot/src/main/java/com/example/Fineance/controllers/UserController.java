@@ -30,6 +30,7 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "Lista użytkowników zwrócona poprawnie")
     })
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -43,6 +44,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "Użytkownik nie znaleziony")
     })
     @GetMapping("/{id_user}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Optional<User> getUserById(
             @Parameter(description = "ID użytkownika", required = true) @PathVariable Long id_user) {
         return userService.getUserById(id_user);

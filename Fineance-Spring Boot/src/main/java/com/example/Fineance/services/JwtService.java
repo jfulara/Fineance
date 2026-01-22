@@ -6,7 +6,6 @@ import com.example.Fineance.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.security.Key;
@@ -29,31 +28,6 @@ public class JwtService {
     @PostConstruct
     public void init() {
         this.signingKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-    }
-
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    public String generateAccessToken(User user) {
-        return generateToken(user, jwtAccessExpiration);
-    }
-
-    public String generateRefreshToken(User user) {
-        return generateToken(user, jwtRefreshExpiration);
     }
 
     public String generateNewAccessToken(String refreshToken) {
@@ -89,18 +63,40 @@ public class JwtService {
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
 
-    public boolean isTokenValid(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    public String generateAccessToken(User user) {
+        return generateToken(user, jwtAccessExpiration);
+    }
+
+    public String generateRefreshToken(User user) {
+        return generateToken(user, jwtRefreshExpiration);
+    }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
 
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    public boolean isTokenValid(String token, String username) {
+        final String extractedUsername = extractUsername(token);
+        return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
     public String getTokenInfo(String token) {

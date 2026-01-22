@@ -10,9 +10,12 @@ import java.util.Optional;
 
 @Service
 public class SavingService {
+    private final SavingRepository savingRepository;
 
     @Autowired
-    private SavingRepository savingRepository;
+    public SavingService(SavingRepository savingRepository) {
+        this.savingRepository = savingRepository;
+    }
 
     public List<Saving> getAllSavingsByUser(Long id_user) {
         return savingRepository.findAllByIdUser(id_user);

@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faChevronRight, faBars, faCirclePlus, faCircleMinus, faPlus, faPenToSquare, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import '../styles/saving-details.css';
 import '../styles/style.css';
 
@@ -34,7 +34,10 @@ export default function SavingDetails() {
                 console.error('Bład podczas pobierania celu:', err);
             })
             .finally(() => {
-                setLoading(false);
+                const timer = setTimeout(() => {
+                    setLoading(false);
+                }, 750);
+                return () => clearTimeout(timer);
             });
     }, []);
 
@@ -47,12 +50,12 @@ export default function SavingDetails() {
 
         setIsDepositing(true);
         try {
-            const response = await fetch(
-                `http://localhost:8080/api/savings/${id}/deposit`,
-                {
+            const response = await fetch(`http://localhost:8080/api/savings/${id}/deposit`, {
                     method: 'POST',
                     credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ amount: parseFloat(depositAmount) })
                 }
             );
@@ -87,12 +90,12 @@ export default function SavingDetails() {
 
         setIsDepositing(true);
         try {
-            const response = await fetch(
-                `http://localhost:8080/api/savings/${id}/withdraw`,
-                {
+            const response = await fetch(`http://localhost:8080/api/savings/${id}/withdraw`, {
                     method: 'POST',
                     credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ amount: parseFloat(withdrawAmount) })
                 }
             );
@@ -137,17 +140,36 @@ export default function SavingDetails() {
 
     const progress = saving ? (saving.amount / saving.goal) * 100 : 0;
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setWidth(progress + "%");
-        }, 50);
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <p>Fineance</p>
+                <i><FontAwesomeIcon icon={faSpinner} /></i>
+            </div>
+        );
 
-        return () => clearTimeout(timer);
-    }, [progress]);
+    }
 
-    if (loading) return <div className="container"><p>Ładowanie...</p></div>;
     if (error) return <div className="container error"><p>Błąd: {error}</p></div>;
     if (!saving) return <div className="container error"><p>Cel nie znaleziony</p></div>;
+
+    function ProgressBar() {
+        const [width, setWidth] = useState("0%");
+
+        useEffect(() => {
+            const timer = setTimeout(() => {
+                setWidth(progress + "%");
+            }, 50);
+            return () => clearTimeout(timer);
+        }, [progress]);
+
+        return (
+            <div
+                className="progress-fill"
+                style={{ width }}
+            />
+        );
+    }
 
     return (
         <>
@@ -161,7 +183,7 @@ export default function SavingDetails() {
                 <ul className="active">
                     <li><Link to="/" className="first"><p>Podsumowanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/history"><p>Historia operacji</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
-                    <li><Link><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
+                    <li><Link to="/budget-analysis"><p>Analiza budżetu</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link to="/savings" className="active"><p>Oszczędzanie</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Cele miesięczne</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
                     <li><Link><p>Stałe wydatki</p><i className="fa-chevron-right"><FontAwesomeIcon icon={faChevronRight} /></i></Link></li>
@@ -223,10 +245,7 @@ export default function SavingDetails() {
 
                             <div className="progress-section">
                                 <div className="progress-bar">
-                                    <div
-                                        className="progress-fill"
-                                        style={{ width }}
-                                    />
+                                    <ProgressBar />
                                 </div>
                                 <div className="progress-info">
                                     <p className="created-date">

@@ -1,5 +1,6 @@
 package com.example.Fineance.controllers;
 
+import com.example.Fineance.FineanceApplication;
 import com.example.Fineance.dto.AddOperationDTO;
 import com.example.Fineance.models.Expense;
 import com.example.Fineance.models.Income;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
@@ -22,19 +25,19 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 @WebMvcTest(OperationController.class)
+@Import(OperationControllerTest.TestConfig.class)
 class OperationControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+
+    @Autowired
     private ExpenseService expenseService;
-    @MockBean
+
+    @Autowired
     private IncomeService incomeService;
-    @MockBean
+
+    @Autowired
     private UserRepository userRepository;
-    @MockBean
-    private com.example.Fineance.services.JwtService jwtService;
-    @MockBean
-    private com.example.Fineance.security.JwtFilter jwtFilter;
 
     @Test
     void addIncome_shouldReturnOk() throws Exception {
@@ -69,6 +72,24 @@ class OperationControllerTest {
         mockMvc.perform(get("/api/operations/history?id_user=1")
                 .with(user("test").roles("USER")))
                 .andExpect(status().isOk());
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public ExpenseService expenseService() {
+            return Mockito.mock(ExpenseService.class);
+        }
+
+        @Bean
+        public IncomeService incomeService() {
+            return Mockito.mock(IncomeService.class);
+        }
+
+        @Bean
+        public UserRepository userRepository() {
+            return Mockito.mock(UserRepository.class);
+        }
     }
 }
 

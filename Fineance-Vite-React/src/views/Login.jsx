@@ -13,8 +13,18 @@ function Login() {
     const navigate = useNavigate()
     const { setUser } = useContext(AuthContext)
 
+    const handleChange = (field, value) => {
+        if (field === 'email') {
+            setEmail(value);
+        } else if (field === 'password') {
+            setPassword(value);
+        }
+        setError('');
+    }
+
     const handleLogin = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        setError('');
 
         try {
             const response = await fetch('http://localhost:8080/api/auth/login', {
@@ -29,12 +39,26 @@ function Login() {
             if (response.ok) {
                 const userData = await response.json();
                 setUser(userData);
-                navigate('/')
+                navigate('/');
             } else {
-                setError('Niepoprawne dane logowania')
+                const errorData = await response.json();
+
+                if (errorData && typeof errorData === 'object') {
+                    setError(
+                        errorData.message ||
+                        errorData.email ||
+                        errorData.password ||
+                        Object.values(errorData)[0] ||
+                        'Niepoprawne dane logowania'
+                    );
+                } else if (response.status === 401) {
+                    setError('Niepoprawne dane logowania');
+                } else {
+                    setError('Wystąpił błąd podczas logowania');
+                }
             }
         } catch (error) {
-            setError('Błąd logowania')
+            setError('Wystąpił błąd połączenia z serwerem')
         }
     };
 
@@ -43,17 +67,19 @@ function Login() {
             <div className="login-container">
                 <div className="logo-side">
                     <div className="logo">
-                        <p>
-                            Fineance
-                        </p>
+                        <p>Fineance</p>
                     </div>
                     <div className="description">
                         <p className="main-description">
                             Dzień dobry!
                         </p>
                         <p className="additional-description">
-                            Zaloguj się lub utwórz nowe konto:
+                            Zaloguj się na swoje konto:
                         </p>
+                    </div>
+                    <div className="register-link">
+                        <p>Nie masz jeszcze konta?&nbsp;</p>
+                        <Link to="/register">Utwórz je tutaj!</Link>
                     </div>
                 </div>
                 <div className="form-side">
@@ -61,18 +87,14 @@ function Login() {
                         <div className="messages">
                             {error && <p>{error}</p>}
                         </div>
-                        <div>
-                            <input placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <div className="auth-input">
+                            <input placeholder="E-mail" value={email} onChange={(e) => handleChange('email', e.target.value)} />
                         </div>
-                        <div>
-                            <input placeholder="Hasło" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <div className="auth-input">
+                            <input placeholder="Hasło" type="password" value={password} onChange={(e) => handleChange('password', e.target.value)} />
                         </div>
                         <div className="button-background">
                             <button className="special-button" type="submit">Zaloguj się</button>
-                        </div>
-                        <div className="register-link">
-                            <p>Nie masz jeszcze konta?&nbsp;</p>
-                            <Link to="/register">Utwórz je tutaj!</Link>
                         </div>
                     </form>
                 </div>

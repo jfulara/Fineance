@@ -12,15 +12,20 @@ public class HomeDTO {
     private double totalExpense;
     private List<CategorySummaryDTO> incomeCategorySummaries;
     private List<CategorySummaryDTO> expenseCategorySummaries;
+    private double balance;
+    private double lastMonthBalance;
 
     public HomeDTO(List<Income> incomes, List<Expense> expenses, double totalIncome, double totalExpense,
-                   List<CategorySummaryDTO> incomeCategorySummaries, List<CategorySummaryDTO> expenseCategorySummaries) {
+                   List<CategorySummaryDTO> incomeCategorySummaries, List<CategorySummaryDTO> expenseCategorySummaries,
+                   double balance, double lastMonthBalance) {
         this.incomes = incomes;
         this.expenses = expenses;
         this.totalIncome = totalIncome;
         this.totalExpense = totalExpense;
         this.incomeCategorySummaries = incomeCategorySummaries;
         this.expenseCategorySummaries = expenseCategorySummaries;
+        this.balance = balance;
+        this.lastMonthBalance = lastMonthBalance;
     }
 
     public List<Income> getIncomes() {
@@ -69,5 +74,21 @@ public class HomeDTO {
 
     public void setExpenseCategorySummaries(List<CategorySummaryDTO> expenseCategorySummaries) {
         this.expenseCategorySummaries = expenseCategorySummaries;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public double getLastMonthBalance() {
+        return lastMonthBalance;
+    }
+
+    public void setLastMonthBalance(double lastMonthBalance) {
+        this.lastMonthBalance = lastMonthBalance;
     }
 }
