@@ -73,6 +73,15 @@ Frontend dostępny będzie pod adresem: http://localhost:5173
 | **HttpOnly Cookies** | Bezpieczny sposób przechowywania tokenów JWT (chroni przed XSS)            |
 | **Docker Compose**   | Ułatwia zarządzanie środowiskiem deweloperskim (PostgreSQL + pgAdmin)      |
 
+## Przykładowe widoki aplikacji
+
+<img width="1920" height="921" alt="Login" src="https://github.com/user-attachments/assets/f63486e8-ff8b-4815-b69d-ae9c2730d472" />
+<img width="1920" height="921" alt="Home" src="https://github.com/user-attachments/assets/df0b1da5-9451-4444-bbe0-fcddb459c7c7" />
+<img width="1920" height="922" alt="OperationHistory" src="https://github.com/user-attachments/assets/24f7b38e-47fa-4297-8091-57c53a4f9368" />
+<img width="1920" height="921" alt="BudgetAnalysis1" src="https://github.com/user-attachments/assets/5fcd0052-6b3c-43e5-bb0f-3235b1aa326f" />
+<img width="1920" height="921" alt="SavingsList" src="https://github.com/user-attachments/assets/caf3f40d-7b1d-4780-9914-962977ed3960" />
+<img width="1920" height="921" alt="SavingDetails" src="https://github.com/user-attachments/assets/89f63cf2-b4d4-4426-a080-2c8b57a2ac1b" />
+
 ## Kontakt
 
 Autor: Jakub Fulara  
