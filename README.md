@@ -1,6 +1,6 @@
 # Fineance – Aplikacja do zarządzania finansami
 
-Fineance to aplikacja webowa umożliwiająca użytkownikom zarządzanie swoimi finansami – dodawanie i przeglądanie operacji finansowych, takich jak wpływy i wydatki, śledzenie historii oraz analiza budżetu.
+Fineance to aplikacja webowa umożliwiająca użytkownikom zarządzanie swoimi finansami – dodawanie, usuwanie i przeglądanie operacji finansowych, w postaci skategoryzowanych wpływów i wydatków, śledzenie historii, analiza budżetu oraz zarządzanie celami oszczędnościowymi.
 
 ## Architektura aplikacji
 
@@ -76,5 +76,5 @@ Frontend dostępny będzie pod adresem: http://localhost:5173
 ## Kontakt
 
 Autor: Jakub Fulara  
-Email: jakub.fulara@student.pk.edu.pl  
-Repozytorium: https://github.com/jfulara/ZTPAI
+Email: fularajakub@onet.pl  
+Repozytorium: https://github.com/jfulara/Fineance
